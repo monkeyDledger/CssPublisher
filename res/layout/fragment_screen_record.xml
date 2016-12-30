@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <RadioGroup
+                android:id="@+id/screen_if_publish"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/screen_publish1"
+                    style="@style/font16_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="本地录屏" />
+
+                <RadioButton
+                    android:id="@+id/screen_publish2"
+                    style="@style/font16_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="录屏直播" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/screen_url"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:visibility="gone" >
+
+                <TextView
+                    style="@style/font14_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="直播地址：" />
+
+                <TextView
+                    android:id="@+id/screen_publish_url"
+                    style="@style/font14_light_sea_green"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textIsSelectable="true"
+                    android:layout_marginLeft="5dp" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/screen_if_save"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <RadioButton
+                    android:id="@+id/screen_save1"
+                    style="@style/font16_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="不保存录屏" />
+
+                <RadioButton
+                    android:id="@+id/screen_save2"
+                    style="@style/font16_gray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="保存录屏" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/screen_file"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <EditText
+                    android:id="@+id/screen_file_path"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/dialog_edit"
+                    android:hint="请设置视频文件名" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/screen_start_btn"
+                style="@style/font18_white"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="25dp"
+                android:background="@color/blue_text"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="开始录屏" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

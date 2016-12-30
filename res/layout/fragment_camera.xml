@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    android:orientation="vertical" >
+    
+    <SurfaceView
+        android:id="@+id/camera_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/camera_switch"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:background="@color/transparent"
+        android:src="@drawable/switch_camera"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/camera_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/camera_switch"
+        android:layout_margin="10dp"
+        android:background="@color/transparent"
+        android:padding="5dp">
+
+        <TextView
+            style="@style/font14_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="直播地址：" />
+
+        <TextView
+            android:id="@+id/camera_publish_url"
+            style="@style/font14_light_sea_green"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textIsSelectable="true" />
+    </LinearLayout>
+    
+    <Spinner 
+        android:id="@+id/camera_size_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/camera_url"
+        android:layout_margin="10dp"
+        android:spinnerMode="dropdown"
+        android:theme="@style/AppBaseTheme"/>
+    
+    <Switch
+        android:id="@+id/camera_switch_preview"
+        style="@style/font16_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/camera_size_spinner"
+        android:layout_margin="10dp"
+        android:background="@color/transparent"
+        android:checked="false"
+        android:paddingLeft="5dp"
+        android:text="摄像头预览"
+        android:textOff="off"
+        android:textOn="on" />
+    
+    <Switch
+        android:id="@+id/camera_if_save"
+        style="@style/font16_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/camera_switch_preview"
+        android:layout_margin="10dp"
+        android:background="@color/transparent"
+        android:checked="false"
+        android:paddingLeft="5dp"
+        android:textOff="off"
+        android:textOn="on"
+        android:text="保存本地录像"
+         />
+
+    <LinearLayout
+        android:id="@+id/camera_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/camera_if_save"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <EditText
+            android:id="@+id/camera_file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_edit"
+            android:hint="请设置视频文件名" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/camera_start_btn"
+        style="@style/font18_white"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/camera_file"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:background="@color/blue_text"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="开始直播" />
+    
+    <!-- <SurfaceView
+        android:id="@+id/camera_surface"
+        android:layout_below="@id/camera_start_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:layout_margin="10dp"
+        android:visibility="gone"/> -->
+
+</RelativeLayout>

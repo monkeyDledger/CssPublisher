@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 浅灰色 -->
+    <color name="light_gray">#f7f6f6</color>
+    <color name="bg_title">#00a2ff</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="blue">#33B5E5</color>
+    <color name="gray_task">#fafafa</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#7c7c7c</color>
+    <color name="backgroud">#e7e7e7</color>
+    <color name="gray_white">#ebebeb</color>
+    <color name="gray_light">#887c7c7c</color>
+    <color name="gray_black">#2e2e2e</color>
+    <color name="yellow">#FFFC00</color>
+    <color name="pink">#FF87EF</color>
+    <color name="orange">#ff6200</color>
+    <color name="list_divider">#D3D3D3</color>
+    <color name="transparent">#00000000</color>
+    <color name="window_bg">#88838B8B</color>
+    <color name="crop_background">#737373</color>
+    <color name="coffee">#9c7f69</color>
+    <color name="tabBackground">#f7f6f6</color>
+    <color name="white_gray">#f5f5f5</color>
+    <color name="white_aplha_50">#f8f8ff</color>
+    <!-- 深绿色 -->
+    <color name="deep_green">#00a762</color>
+    <!-- 浅绿色 -->
+    <color name="light_green">#5fd49f</color>
+    <!-- 海洋绿 -->
+    <color name="sea_green">#00a762</color>
+    <!-- 水鸭色 -->
+    <color name="teal">#077b88</color>
+    
+
+    <!-- 通用的tab选中和未选中颜色 -->
+    <color name="common_tab_f">#0aadc2</color>
+    <color name="common_tab_n">#887e79</color>
+    <color name="assignment_detail_sign_tab_title">#959d9e</color>
+    <color name="assignment_detail_sign_tab_f">#e1dfdf</color>
+    <color name="assignment_detail_sign_tab_false">#feaaaa</color>
+    <color name="assignment_detail_unsign_tab">#ffe465</color>
+    <color name="left_menu_text_color">#85dde7</color>
+
+    <color name="tab_text">#8a8a8a</color>
+    <color name="tab_blue">#1296db</color>
+    <!-- 首页 -->
+    <color name="bg_background">#e7e7e7</color>
+    <color name="circle_fillcolor">#ff4b4b4b</color>
+    <color name="circle_pagecolor">#ffa4a7ae</color>
+    <color name="bg_person_normal">#00000000</color>
+    <color name="menu_pressed">#515153</color>
+    <color name="full_transparent">#00000000</color>
+
+    <!-- 注册 -->
+    <color name="grey_text">#cfd0d0</color>
+    <color name="blue_text">#64b1ba</color>
+
+</resources>

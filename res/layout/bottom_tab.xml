@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="horizontal" >
+    
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="3dp"
+        android:id="@+id/tab_screen_record"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:onClick="onClick">
+
+        <ImageButton
+            android:id="@+id/record_screen"
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/phone_record_light"
+            android:background="#00000000"/>
+        <TextView
+            android:id="@+id/record_screen_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:textSize="12sp"
+            android:textColor="@color/tab_blue"
+            android:text="设备录屏"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/tab_camera_record"
+        android:gravity="center"
+        android:layout_margin="3dp"
+        android:orientation="vertical"
+        android:onClick="onClick">
+
+        <ImageButton
+            android:id="@+id/record_camera"
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/camera"
+            android:background="#00000000"/>
+        <TextView
+            android:id="@+id/record_camera_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:textColor="#8a8a8a"
+            android:textSize="12sp"
+            android:text="摄像直播"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/tab_user"
+        android:gravity="center"
+        android:layout_margin="3dp"
+        android:orientation="vertical"
+        android:onClick="onClick">
+
+        <ImageButton
+            android:id="@+id/record_user"
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/user"
+            android:background="#00000000"/>
+        <TextView
+            android:id="@+id/record_user_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:textColor="#8a8a8a"
+            android:textSize="12sp"
+            android:text="我的"/>
+    </LinearLayout>
+    
+
+</LinearLayout>

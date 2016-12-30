@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartPublisherSDKDemo</string>
+    <!-- <string name="app_name">CSSPublisher</string> -->
+    <string name="hello_world">Hello world!</string>
+    <string name="server_url">rtmp://172.20.6.162:1935/live/</string>
+    <string name="http_server">http://172.20.7.66:3010/api/</string>
+    <string name="node_server">http://172.18.63.148:3128/api/</string>
+    <!-- <string name="node_server">http://172.20.7.66:3010/api/</string> -->
+    <string name="default_record_dir">/sdcard/csspublisher/records/</string>
+    <string name="default_rtmp_dir">/sdcard/csspublisher/rtmps/</string>
+    <string name="default_camera_dir">/sdcard/csspublisher/cameras/</string>
+
+</resources>

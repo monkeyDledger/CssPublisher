@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/user_no_records"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:visibility="gone"
+        android:text="本地没有相关视频文件"
+        style="@style/font16_red"/>
+    
+    <LinearLayout 
+        android:id="@+id/user_with_records"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:padding="2dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+         <TextView 
+            android:id="@+id/user_record_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            style="@style/font16_gray"/>
+        
+        <TextView 
+            android:id="@+id/user_record_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/font14_gray"/>
+        
+    </LinearLayout>
+
+</LinearLayout>
