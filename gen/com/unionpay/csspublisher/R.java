@@ -201,7 +201,11 @@ public final class R {
          */
         public static final int hello_world=0x7f050001;
         public static final int http_server=0x7f050003;
+        /**  用户登录处理 
+         */
         public static final int node_server=0x7f050004;
+        /** ngnix rtmp server  
+         */
         public static final int server_url=0x7f050002;
     }
     public static final class style {

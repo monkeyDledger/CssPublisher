@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.unionpay.application.MyApplication;
 import com.unionpay.model.FileInfoBean;
+import com.unionpay.service.MediaRecordService;
 import com.unionpay.service.RtmpRecordService;
 import com.unionpay.service.ScreenRecordService;
 import com.unionpay.service.ScreenRecordWithImageService;
@@ -50,8 +51,8 @@ public class ScreenRecordFragment extends Fragment {
     private String userName, rtmpUrl, recordFileName;
 
     private ScreenRecordService screenRecord;
+    private MediaRecordService mediaRecord;
     private RtmpRecordService rtmpRecord;
-    private ScreenRecordWithImageService recordWithImageService;
 
     // 设备分辨率
     private int displayWidth, displayHeight;
@@ -103,7 +104,7 @@ public class ScreenRecordFragment extends Fragment {
 		    urlLayout.setVisibility(View.GONE);
 		    localRadio.setVisibility(View.GONE);
 		    fileLayout.setVisibility(View.VISIBLE);
-		    if (screenRecord == null && rtmpRecord == null) {
+		    if (mediaRecord == null && rtmpRecord == null) {
 			RECORDKIND = 0;
 		    }
 		} else {
@@ -125,12 +126,12 @@ public class ScreenRecordFragment extends Fragment {
 	    public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (checkedId == saveBtn1.getId()) {
 		    fileLayout.setVisibility(View.GONE);
-		    if (screenRecord == null && rtmpRecord == null) {
+		    if (mediaRecord == null && rtmpRecord == null) {
 			RECORDKIND = 1;
 		    }
 		} else {
 		    fileLayout.setVisibility(View.VISIBLE);
-		    if (screenRecord == null && rtmpRecord == null) {
+		    if (mediaRecord == null && rtmpRecord == null) {
 			RECORDKIND = 2;
 		    }
 		}
@@ -169,7 +170,7 @@ public class ScreenRecordFragment extends Fragment {
 		    MyApplication.getInstance().showToast(getActivity(), "请先输入视频的文件名");
 		    return;
 		}
-		if (screenRecord == null && rtmpRecord == null) {
+		if (mediaRecord == null && rtmpRecord == null) {
 		    recordFileName = recordFileName.replaceAll(" ", "");
 		    List<String> existedName = getExistedFiles();
 		    if (existedName != null) {
@@ -208,9 +209,9 @@ public class ScreenRecordFragment extends Fragment {
      * 本地录屏
      */
     private void startLocalRecord() {
-	if (screenRecord != null) {
-	    screenRecord.quit();
-	    screenRecord = null;
+	if (mediaRecord != null) {
+	    mediaRecord.release();
+	    mediaRecord = null;
 	    PreferenceUtil.setBoolean("is_record", false);
 	    MyApplication.getInstance().showToast(getActivity(), "录屏结束");
 	    startBtn.setText("开始录屏");
@@ -263,9 +264,12 @@ public class ScreenRecordFragment extends Fragment {
 	    // 本地录屏
 	    // 标示当前已有录制进程
 	    File file = new File(PreferenceUtil.getString("local_dir", defaultPath) + recordFileName + ".mp4");
-	    screenRecord = new ScreenRecordService(displayWidth, displayHeight, 6000000, 1, mediaProjection,
-		    file.getAbsolutePath());
-	    screenRecord.start();
+//	    screenRecord = new ScreenRecordService(displayWidth, displayHeight, 6000000, 1, mediaProjection,
+//		    file.getAbsolutePath());
+//	    screenRecord.start();
+	    mediaRecord = new MediaRecordService(displayWidth, displayHeight, 6000000, 1, 
+		    mediaProjection, file.getAbsolutePath());
+	    mediaRecord.start();
 	    break;
 	case 1:
 	    // 录屏直播且不保存
@@ -337,7 +341,7 @@ public class ScreenRecordFragment extends Fragment {
 
     public void onResume() {
 	super.onResume();
-	if (screenRecord != null || rtmpRecord != null) {
+	if (mediaRecord != null || rtmpRecord != null) {
 	    startBtn.setText("录屏ing...点击停止");
 	}
 	Log.i(TAG, "onResume");
@@ -361,8 +365,8 @@ public class ScreenRecordFragment extends Fragment {
     public void onDestroy() {
 	super.onDestroy();
 	Log.i(TAG, "onDestroy");
-	if (screenRecord != null) {
-	    screenRecord.quit();
+	if (mediaRecord != null) {
+	    mediaRecord.release();
 	}
 	if (rtmpRecord != null) {
 	    rtmpRecord.quit();

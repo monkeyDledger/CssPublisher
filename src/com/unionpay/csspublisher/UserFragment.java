@@ -150,7 +150,7 @@ public class UserFragment extends Fragment {
 	userName = PreferenceUtil.getString("user_name", "你");
 	userTextView.setText(userName);
 	
-	httpUrl = getString(R.string.http_server);
+	httpUrl = getString(R.string.node_server);
 
 	fileList = new ArrayList<FileInfoBean>();
 	allFiles = new ArrayList<FileInfoBean>();
