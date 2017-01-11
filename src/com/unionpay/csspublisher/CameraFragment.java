@@ -7,7 +7,10 @@ import java.util.List;
 import com.daniulive.smartpublisher.SmartPublisherJni;
 import com.eventhandle.SmartEventCallback;
 import com.unionpay.application.MyApplication;
+import com.unionpay.util.HttpUtil;
 import com.unionpay.util.PreferenceUtil;
+import com.unionpay.util.StatusNotifyTask;
+import com.voiceengine.NTAudioRecord;
 
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -59,9 +62,11 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
     private SurfaceHolder mHolder = null;
     private Camera camera = null;
     private AutoFocusCallback mAutoFocusCallback = null;
+    
+    private NTAudioRecord audioRecord;
 
-    private String rtmpUrl;
-    private String recordName;
+    private String rtmpUrl, statusUrl;
+    private String userName;
     private int displayWidth = 640, displayHeight = 480;
 
     private boolean isRecord; // 当前是否有正在录屏的进程
@@ -134,8 +139,7 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 		} else {
 		    mSurfaceView.setVisibility(View.GONE);
 		    switchCameraBtn.setVisibility(View.GONE);
-		    startBtn.setBackgroundColor(getResources().getColor(R.color.blue_text));;
-		    ;
+		    startBtn.setBackgroundColor(getResources().getColor(R.color.blue_text));
 		    isPreview = false;
 		}
 	    }
@@ -186,11 +190,11 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
     }
 
     private void initData() {
-	rtmpUrl = getString(R.string.server_url) + PreferenceUtil.getString("user_name", "");
+	userName = PreferenceUtil.getString("user_name", "");
+	rtmpUrl = getString(R.string.server_url) + userName;
 	publishUrl.setText(rtmpUrl);
-
-	// displayWidth = PreferenceUtil.getInt("device_width", 480);
-	// displayHeight = PreferenceUtil.getInt("device_height", 640);
+	
+	statusUrl = getString(R.string.node_server) + "liveStatus";
 
 	publisherJni = new SmartPublisherJni();
     }
@@ -228,8 +232,8 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 	    PreferenceUtil.setBoolean("is_camera", true);
 	    startBtn.setText("正在直播...点击停止");
 	    if (publisherJni != null) {
-		// 只推送视频
-		publisherJni.SmartPublisherInit(getActivity().getApplicationContext(), 0, 1, displayWidth,
+		// 推送音视频
+		publisherJni.SmartPublisherInit(getActivity(), 1, 1, displayWidth,
 			displayHeight);
 		publisherJni.SetSmartPublisherEventCallback(new EventHande());
 		if (isSave) {
@@ -243,8 +247,11 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 		    camera = openCamera(currentCameraType);
 		}
 
+		initAudioRecord();
+		
 		int result = publisherJni.SmartPublisherStart();
 		if (result == 0) {
+		    new StatusNotifyTask(userName, "1", getActivity()).execute();
 		    Log.i(TAG, "camera publish success");
 		} else {
 		    Log.i(TAG, "camera publish error");
@@ -253,16 +260,33 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 
 	}
     };
+    
+    /**
+     * 检查音频捕捉
+     */
+    private void initAudioRecord(){
+	if(audioRecord == null){
+	    audioRecord = new NTAudioRecord(getActivity(), 1);
+	}
+	if(audioRecord != null){
+	    audioRecord.executeAudioRecordMethod();
+	}
+    }
 
     /**
      * 结束直播
      */
     private void stop() {
+	if(audioRecord != null){
+	    audioRecord.StopRecording();
+	    audioRecord = null;
+	}
 	if (publisherJni != null) {
 	    publisherJni.SmartPublisherStop();
 	}
 	isStartLive = false;
 	startBtn.setText("开始直播");
+	new StatusNotifyTask(userName, "0", getActivity()).execute();
     }
 
     @Override

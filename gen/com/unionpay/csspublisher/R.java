@@ -193,8 +193,6 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f050000;
         public static final int default_camera_dir=0x7f050007;
-        /**  <string name="node_server">http://172.20.7.66:3010/api/</string> 
-         */
         public static final int default_record_dir=0x7f050005;
         public static final int default_rtmp_dir=0x7f050006;
         /**  <string name="app_name">CSSPublisher</string> 
@@ -202,6 +200,7 @@ public final class R {
         public static final int hello_world=0x7f050001;
         public static final int http_server=0x7f050003;
         /**  用户登录处理 
+ <string name="node_server">http://172.18.63.148:3128/api/</string> 
          */
         public static final int node_server=0x7f050004;
         /** ngnix rtmp server  

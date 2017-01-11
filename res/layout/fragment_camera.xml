@@ -78,8 +78,8 @@
         android:background="@color/transparent"
         android:checked="false"
         android:paddingLeft="5dp"
-        android:textOff="off"
-        android:textOn="on"
+        android:textOff="no"
+        android:textOn="yes"
         android:text="保存本地录像"
          />
 

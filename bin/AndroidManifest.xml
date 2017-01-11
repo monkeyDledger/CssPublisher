@@ -48,8 +48,7 @@
         
         <activity
             android:name="com.unionpay.csspublisher.VideoPlayActivity"
-            android:label="视频播放页面" 
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:label="视频播放"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
         </activity>

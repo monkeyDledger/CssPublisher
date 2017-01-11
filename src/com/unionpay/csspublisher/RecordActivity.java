@@ -49,7 +49,7 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
 
     // 设备分辨率
     private DisplayMetrics metrics;
-    private int displayWidth, displayHeight;
+    private int displayWidth, displayHeight, densityDpi;
     
     private String[] titles = { "录屏", "直播", "我的" };
     private String[] RECORDDIR = { "/sdcard/csspublisher/records/", "/sdcard/csspublisher/rtmps/",
@@ -157,8 +157,10 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
 	// 获取并保存设备分辨率
 	metrics = new DisplayMetrics();
 	getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+	densityDpi = metrics.densityDpi;
 	displayWidth = metrics.widthPixels;
 	displayHeight = metrics.heightPixels;
+	PreferenceUtil.setInt("device_dpi", densityDpi);
 	PreferenceUtil.setInt("device_width", displayWidth);
 	PreferenceUtil.setInt("device_height", displayHeight);
 	Log.i("pixels: ", displayWidth + ", " + displayHeight);

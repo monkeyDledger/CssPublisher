@@ -8,24 +8,25 @@ import com.unionpay.application.MyApplication;
 import com.unionpay.model.FileInfoBean;
 import com.unionpay.service.MediaRecordService;
 import com.unionpay.service.RtmpRecordService;
+import com.unionpay.service.ScreenAudioRecordService;
 import com.unionpay.service.ScreenRecordService;
-import com.unionpay.service.ScreenRecordWithImageService;
 import com.unionpay.util.FileUtil;
+import com.unionpay.util.HttpUtil;
 import com.unionpay.util.PreferenceUtil;
+import com.unionpay.util.StatusNotifyTask;
 
 import android.content.Context;
 import android.content.Intent;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +42,7 @@ public class ScreenRecordFragment extends Fragment {
 
     private LinearLayout urlLayout, fileLayout;
     private RadioGroup publishRadio, localRadio;
-    private RadioButton publishBtn1, publishBtn2, saveBtn1, saveBtn2;
+    private RadioButton publishBtn1, saveBtn1;
     private EditText fileEdit;
     private Button startBtn;
     private TextView urlText;
@@ -49,13 +50,17 @@ public class ScreenRecordFragment extends Fragment {
     private MediaProjectionManager mProjectionManager;
 
     private String userName, rtmpUrl, recordFileName;
+    
+    //直播状态通知接口
+    private static String statusUrl = null; 
 
     private ScreenRecordService screenRecord;
+    private ScreenAudioRecordService saRecordService;
     private MediaRecordService mediaRecord;
     private RtmpRecordService rtmpRecord;
 
     // 设备分辨率
-    private int displayWidth, displayHeight;
+    private int displayWidth, displayHeight, dpi;
 
     // 本地已有的视频文件
     private List<String> videosName;
@@ -88,9 +93,7 @@ public class ScreenRecordFragment extends Fragment {
 	urlText = (TextView) v.findViewById(R.id.screen_publish_url);
 	startBtn = (Button) v.findViewById(R.id.screen_start_btn);
 	publishBtn1 = (RadioButton) v.findViewById(R.id.screen_publish1);
-	publishBtn2 = (RadioButton) v.findViewById(R.id.screen_publish2);
 	saveBtn1 = (RadioButton) v.findViewById(R.id.screen_save1);
-	saveBtn2 = (RadioButton) v.findViewById(R.id.screen_save2);
 	fileEdit = (EditText) v.findViewById(R.id.screen_file_path);
 
 	// 默认选择本地录屏
@@ -104,7 +107,7 @@ public class ScreenRecordFragment extends Fragment {
 		    urlLayout.setVisibility(View.GONE);
 		    localRadio.setVisibility(View.GONE);
 		    fileLayout.setVisibility(View.VISIBLE);
-		    if (mediaRecord == null && rtmpRecord == null) {
+		    if (mediaRecord == null && saRecordService == null) {
 			RECORDKIND = 0;
 		    }
 		} else {
@@ -113,7 +116,7 @@ public class ScreenRecordFragment extends Fragment {
 		    urlLayout.setVisibility(View.VISIBLE);
 		    localRadio.setVisibility(View.VISIBLE);
 		    fileLayout.setVisibility(View.GONE);
-		    if (screenRecord == null && rtmpRecord == null) {
+		    if (screenRecord == null && saRecordService == null) {
 			RECORDKIND = 1;
 		    }
 		}
@@ -126,12 +129,12 @@ public class ScreenRecordFragment extends Fragment {
 	    public void onCheckedChanged(RadioGroup group, int checkedId) {
 		if (checkedId == saveBtn1.getId()) {
 		    fileLayout.setVisibility(View.GONE);
-		    if (mediaRecord == null && rtmpRecord == null) {
+		    if (mediaRecord == null && saRecordService == null) {
 			RECORDKIND = 1;
 		    }
 		} else {
 		    fileLayout.setVisibility(View.VISIBLE);
-		    if (mediaRecord == null && rtmpRecord == null) {
+		    if (mediaRecord == null && saRecordService == null) {
 			RECORDKIND = 2;
 		    }
 		}
@@ -144,6 +147,7 @@ public class ScreenRecordFragment extends Fragment {
     private void initEvent() {
 	displayWidth = PreferenceUtil.getInt("device_width", 480);
 	displayHeight = PreferenceUtil.getInt("device_height", 640);
+	dpi = PreferenceUtil.getInt("device_dpi", 1);
 
 	mProjectionManager = (MediaProjectionManager) getActivity().getSystemService("media_projection");
     }
@@ -152,6 +156,8 @@ public class ScreenRecordFragment extends Fragment {
 	userName = PreferenceUtil.getString("user_name", "");
 	rtmpUrl = getString(R.string.server_url) + userName;
 	urlText.setText(rtmpUrl);
+	
+	statusUrl = getString(R.string.node_server) + "liveStatus";
     }
 
     /**
@@ -170,7 +176,7 @@ public class ScreenRecordFragment extends Fragment {
 		    MyApplication.getInstance().showToast(getActivity(), "请先输入视频的文件名");
 		    return;
 		}
-		if (mediaRecord == null && rtmpRecord == null) {
+		if (mediaRecord == null && saRecordService == null) {
 		    recordFileName = recordFileName.replaceAll(" ", "");
 		    List<String> existedName = getExistedFiles();
 		    if (existedName != null) {
@@ -215,6 +221,8 @@ public class ScreenRecordFragment extends Fragment {
 	    PreferenceUtil.setBoolean("is_record", false);
 	    MyApplication.getInstance().showToast(getActivity(), "录屏结束");
 	    startBtn.setText("开始录屏");
+	    
+	    notifyStatus("0");
 	} else {
 	    Intent captureIntent = mProjectionManager.createScreenCaptureIntent();
 	    startActivityForResult(captureIntent, LOCAL_REQUEST_CODE);
@@ -223,12 +231,10 @@ public class ScreenRecordFragment extends Fragment {
 
     /**
      * 录屏直播
-     * 
-     * @param ifSave
-     *            是否保存到本地
+     * @param ifSave 是否保存到本地
      */
     private void startRtmpRecord(boolean ifSave) {
-	if (rtmpRecord == null) {
+	if (saRecordService == null) {
 	    Intent captureIntent = mProjectionManager.createScreenCaptureIntent();
 	    if (ifSave) {
 		// 录屏直播且保存
@@ -238,11 +244,12 @@ public class ScreenRecordFragment extends Fragment {
 		startActivityForResult(captureIntent, RTMP_REQUEST_CODE);
 	    }
 	} else {
-	    rtmpRecord.quit();
-	    rtmpRecord = null;
+	    saRecordService.release();
+	    saRecordService = null;
 	    PreferenceUtil.setBoolean("is_record", false);
 	    MyApplication.getInstance().showToast(getActivity(), "录屏结束");
 	    startBtn.setText("开始录屏");
+	    notifyStatus("0");
 	}
     }
 
@@ -267,7 +274,7 @@ public class ScreenRecordFragment extends Fragment {
 //	    screenRecord = new ScreenRecordService(displayWidth, displayHeight, 6000000, 1, mediaProjection,
 //		    file.getAbsolutePath());
 //	    screenRecord.start();
-	    mediaRecord = new MediaRecordService(displayWidth, displayHeight, 6000000, 1, 
+	    mediaRecord = new MediaRecordService(displayWidth, displayHeight, 6000000, dpi, 
 		    mediaProjection, file.getAbsolutePath());
 	    mediaRecord.start();
 	    break;
@@ -279,9 +286,9 @@ public class ScreenRecordFragment extends Fragment {
 	    // getActivity());
 	    // recordWithImageService.start();
 
-	    rtmpRecord = new RtmpRecordService(displayWidth, displayHeight, rtmpUrl, 5000000, 1, mediaProjection,
+	    saRecordService = new ScreenAudioRecordService(displayWidth, displayHeight, rtmpUrl, 6000000, dpi, mediaProjection,
 		    getActivity());
-	    rtmpRecord.start();
+	    saRecordService.start();
 	    break;
 	case 2:
 	    // 录屏直播且保存
@@ -292,15 +299,26 @@ public class ScreenRecordFragment extends Fragment {
 	    // getActivity());
 	    // recordWithImageService.start();
 
-	    rtmpRecord = new RtmpRecordService(displayWidth, displayHeight, rtmpUrl, 2000000, 1, mediaProjection,
+	    saRecordService = new ScreenAudioRecordService(displayWidth, displayHeight, rtmpUrl, 6000000, dpi, mediaProjection,
 		    getActivity(), rtmpFile.getAbsolutePath());
-	    rtmpRecord.start();
+	    saRecordService.start();
 	    break;
 	default:
 	    break;
 	}
 	MyApplication.getInstance().showToast(getActivity(), "正在录屏中...");
 	getActivity().moveTaskToBack(true);
+	
+	notifyStatus("1");
+    }
+    
+    /**
+     * 通知直播状态
+     * @param status
+     */
+    private void notifyStatus(String status){
+	Log.i(TAG, "status url " + statusUrl);
+	new StatusNotifyTask(userName, status, getActivity()).execute();
     }
 
     /**

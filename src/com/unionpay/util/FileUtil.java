@@ -55,6 +55,22 @@ public class FileUtil {
     }
     
     /**
+     * 重命名，复制到指定路径，并删除原文件
+     * @param oldPath
+     * @param newPath
+     */
+    public static void renameFileAndDelete(String oldPath, String newPath){
+	File oldFile = new File(oldPath);
+	File newFile = new File(newPath);
+	if(oldFile.exists()){
+	    oldFile.renameTo(newFile);
+	}
+	if(newFile.exists()){
+	    oldFile.delete();
+	}
+    }
+    
+    /**
      * 将long型的时间格式转为指定格式String
      * @param time
      * @return

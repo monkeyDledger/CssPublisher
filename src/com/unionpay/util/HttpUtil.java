@@ -17,16 +17,12 @@ import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.unionpay.application.MyApplication;
 import com.unionpay.model.FileInfoBean;
 import com.unionpay.model.ResultBean;
 
-import android.R.plurals;
 import android.content.Context;
-import android.os.Looper;
 import android.util.Log;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -113,7 +109,43 @@ public class HttpUtil {
     }
     
     /**
-     * okhttp批量上传文件,待参数和进度
+     * 验证登录
+     * @param url
+     * @param userName
+     * @param password
+     * @return
+     */
+    public static ResultBean login(String url, String userName, String password){
+	JsonObject json = new JsonObject();
+	json.addProperty("username", userName);
+	json.addProperty("password", password);
+	System.out.println("jsonData: "+ json.toString());
+	String result = postData(url, json.toString());
+	ResultBean resultBean = gson.fromJson(result, ResultBean.class);
+	return resultBean;
+    }
+    
+    /**
+     * 根据用户名通知该用户是否开启直播
+     * @param url
+     * @param userName
+     * @param isPublish， 0：未开启直播， 1：正在直播
+     * @return
+     */
+    public static ResultBean sendPublishStatus(String url, String userName, String isPublish){
+	JsonObject json = new JsonObject();
+	json.addProperty("username", userName);
+	json.addProperty("isPublish", isPublish);
+	String result = postData(url, json.toString());
+	System.out.println("jsonData: "+ json.toString());
+	
+	ResultBean resultBean = gson.fromJson(result, ResultBean.class);
+	return resultBean;
+    }
+    
+    
+    /**
+     * okhttp批量上传文件,带参数和进度
      * @param url
      * @param files
      * @throws IOException 
@@ -175,21 +207,5 @@ public class HttpUtil {
 	
     }
     
-    /**
-     * 验证登录
-     * @param url
-     * @param userName
-     * @param password
-     * @return
-     */
-    public static ResultBean login(String url, String userName, String password){
-	JsonObject json = new JsonObject();
-	json.addProperty("username", userName);
-	json.addProperty("password", password);
-	System.out.println("jsonData: "+ json.toString());
-	String result = postData(url, json.toString());
-	ResultBean resultBean = gson.fromJson(result, ResultBean.class);
-	return resultBean;
-    }
     
 }
