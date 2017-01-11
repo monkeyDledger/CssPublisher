@@ -28,8 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * 主界面 ViewPager+Fragment
- * 
+ * 主界面 
+ * ViewPager+Fragment
  * @author lichen2
  */
 public class RecordActivity extends FragmentActivity implements OnClickListener {

@@ -45,6 +45,10 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+/**
+ * 摄像头直播
+ * @author lichen2
+ */
 @SuppressWarnings("deprecation")
 public class CameraFragment extends Fragment implements Callback, PreviewCallback {
 

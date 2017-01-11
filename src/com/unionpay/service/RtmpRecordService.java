@@ -21,7 +21,6 @@ import android.view.Surface;
 
 /**
  * 录屏推流
- * 
  * @author lichen2
  */
 public class RtmpRecordService extends Thread {

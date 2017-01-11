@@ -35,10 +35,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * 我的页面 视频列表的展示, 批量删除和上传文件
- * 
+ * 我的页面 
+ * 视频列表的展示、批量删除、上传文件
  * @author lichen2
- *
  */
 public class UserFragment extends Fragment {
 

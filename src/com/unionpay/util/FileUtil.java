@@ -10,6 +10,10 @@ import com.unionpay.model.FileInfoBean;
 
 import android.util.Log;
 
+/**
+ * 文件操作工具类
+ * @author lichen2
+ */
 public class FileUtil {
     
     private static String path;

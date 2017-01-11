@@ -9,6 +9,7 @@ import android.util.Log;
 
 /**
  * 用户直播状态通知
+ * 网络请求不能放在UI进程中
  * @author lichen2
  */
 public class StatusNotifyTask extends AsyncTask<Object, Object, ResultBean>{

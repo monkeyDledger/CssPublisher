@@ -7,11 +7,8 @@ import java.util.List;
 import com.unionpay.application.MyApplication;
 import com.unionpay.model.FileInfoBean;
 import com.unionpay.service.MediaRecordService;
-import com.unionpay.service.RtmpRecordService;
 import com.unionpay.service.ScreenAudioRecordService;
-import com.unionpay.service.ScreenRecordService;
 import com.unionpay.util.FileUtil;
-import com.unionpay.util.HttpUtil;
 import com.unionpay.util.PreferenceUtil;
 import com.unionpay.util.StatusNotifyTask;
 
@@ -19,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -36,6 +32,12 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+/**
+ * 设备录屏界面
+ * 本地录屏 MediaRecordService 
+ * 录屏直播 ScreenAudioRecordService
+ * @author lichen2
+ */
 public class ScreenRecordFragment extends Fragment {
 
     private static final String TAG = "ScreenRecordFragment";
@@ -54,10 +56,8 @@ public class ScreenRecordFragment extends Fragment {
     //直播状态通知接口
     private static String statusUrl = null; 
 
-    private ScreenRecordService screenRecord;
     private ScreenAudioRecordService saRecordService;
     private MediaRecordService mediaRecord;
-    private RtmpRecordService rtmpRecord;
 
     // 设备分辨率
     private int displayWidth, displayHeight, dpi;
@@ -116,7 +116,7 @@ public class ScreenRecordFragment extends Fragment {
 		    urlLayout.setVisibility(View.VISIBLE);
 		    localRadio.setVisibility(View.VISIBLE);
 		    fileLayout.setVisibility(View.GONE);
-		    if (screenRecord == null && saRecordService == null) {
+		    if (mediaRecord == null && saRecordService == null) {
 			RECORDKIND = 1;
 		    }
 		}
@@ -359,7 +359,7 @@ public class ScreenRecordFragment extends Fragment {
 
     public void onResume() {
 	super.onResume();
-	if (mediaRecord != null || rtmpRecord != null) {
+	if (mediaRecord != null || saRecordService != null) {
 	    startBtn.setText("录屏ing...点击停止");
 	}
 	Log.i(TAG, "onResume");
@@ -386,8 +386,8 @@ public class ScreenRecordFragment extends Fragment {
 	if (mediaRecord != null) {
 	    mediaRecord.release();
 	}
-	if (rtmpRecord != null) {
-	    rtmpRecord.quit();
+	if (saRecordService != null) {
+	    saRecordService.release();
 	}
     }
 

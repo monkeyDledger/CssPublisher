@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * 自定义titlebar
+ * @author lichen2
+ */
 public class TopTitleBar extends LinearLayout {
 
     private Context mContext;

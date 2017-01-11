@@ -198,6 +198,8 @@ public final class R {
         /**  <string name="app_name">CSSPublisher</string> 
          */
         public static final int hello_world=0x7f050001;
+        /**  <string name="server_url">rtmp://172.20.6.162:1935/live/</string> 
+         */
         public static final int http_server=0x7f050003;
         /**  用户登录处理 
  <string name="node_server">http://172.18.63.148:3128/api/</string> 

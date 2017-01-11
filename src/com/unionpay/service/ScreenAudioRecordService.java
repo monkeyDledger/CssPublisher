@@ -21,8 +21,8 @@ import android.os.Looper;
 import android.util.Log;
 
 /**
- * 录屏直播，包括音频 通过ImageReader获取视频帧
- * 
+ * 录屏直播
+ * 包括音频 通过ImageReader获取视频帧
  * @author lichen2
  */
 @SuppressLint("SdCardPath")

@@ -11,7 +11,8 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 /**
- * SharedPreferences工具类，存储数据
+ * SharedPreferences工具类
+ * 存储数据
  * @author lichen2
  */
 public class PreferenceUtil {

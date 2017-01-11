@@ -32,7 +32,6 @@ import okhttp3.Response;
 
 /**
  * Http通信工具类
- * 
  * @author lichen2
  */
 public class HttpUtil {

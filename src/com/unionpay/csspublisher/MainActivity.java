@@ -18,7 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * 首页， 登录管理
+ * 首页
+ * 登录管理
  * @author lichen2
  */
 public class MainActivity extends Activity {
