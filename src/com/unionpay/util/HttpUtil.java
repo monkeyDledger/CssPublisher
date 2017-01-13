@@ -17,6 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.unionpay.application.MyApplication;
 import com.unionpay.model.FileInfoBean;
 import com.unionpay.model.ResultBean;
 

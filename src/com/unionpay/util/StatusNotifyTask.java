@@ -1,9 +1,7 @@
 package com.unionpay.util;
 
-import com.unionpay.csspublisher.R;
 import com.unionpay.model.ResultBean;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -20,13 +18,10 @@ public class StatusNotifyTask extends AsyncTask<Object, Object, ResultBean>{
     
     private String status;
     
-    private Context context;
-    
-    public StatusNotifyTask(String userName, String status, Context context) {
+    public StatusNotifyTask(String url, String userName, String status) {
 	this.userName = userName;
 	this.status = status;
-	this.context = context;
-	this.url = context.getString(R.string.node_server) + "liveStatus";
+	this.url = url;
     }
 
     @Override

@@ -195,18 +195,12 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 
     private void initData() {
 	userName = PreferenceUtil.getString("user_name", "");
-	rtmpUrl = getString(R.string.server_url) + userName;
+	rtmpUrl = getString(R.string.rtmp_server_url) + userName;
 	publishUrl.setText(rtmpUrl);
 	
-	statusUrl = getString(R.string.node_server) + "liveStatus";
+	statusUrl = getString(R.string.http_server) + "liveStatus";
 
 	publisherJni = new SmartPublisherJni();
-    }
-
-    @Override
-    public void onDestroy() {
-	super.onDestroy();
-	stop();
     }
 
     /**
@@ -255,7 +249,7 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 		
 		int result = publisherJni.SmartPublisherStart();
 		if (result == 0) {
-		    new StatusNotifyTask(userName, "1", getActivity()).execute();
+		    new StatusNotifyTask(statusUrl, userName, "1").execute();
 		    Log.i(TAG, "camera publish success");
 		} else {
 		    Log.i(TAG, "camera publish error");
@@ -264,6 +258,12 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 
 	}
     };
+    
+    public void onDestroy() {
+	super.onDestroy();
+	Log.i(TAG, "onDestroy");
+	stop();
+    }
     
     /**
      * 检查音频捕捉
@@ -286,11 +286,11 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 	    audioRecord = null;
 	}
 	if (publisherJni != null) {
+	    new StatusNotifyTask(statusUrl, userName, "0").execute();
 	    publisherJni.SmartPublisherStop();
 	}
 	isStartLive = false;
 	startBtn.setText("开始直播");
-	new StatusNotifyTask(userName, "0", getActivity()).execute();
     }
 
     @Override
@@ -617,7 +617,7 @@ public class CameraFragment extends Fragment implements Callback, PreviewCallbac
 	// TODO Auto-generated method stub
 	Log.i(TAG, "Surface destroyed");
     }
-
+    
     class EventHande implements SmartEventCallback {
 
 	String txt;

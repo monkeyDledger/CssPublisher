@@ -41,6 +41,7 @@
             style="@style/font14_light_sea_green"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             android:layout_marginStart="5dp"
             android:textIsSelectable="true" />
     </LinearLayout>

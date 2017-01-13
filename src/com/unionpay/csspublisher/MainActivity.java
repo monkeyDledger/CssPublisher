@@ -18,8 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * 首页
- * 登录管理
+ * 首页 登录管理
+ * 
  * @author lichen2
  */
 public class MainActivity extends Activity {
@@ -39,6 +39,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	if((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0){  
+	    finish();  
+	    return;  
+	 }  
 	setContentView(R.layout.activity_main);
 
 	MyApplication.getInstance().addActivity(this);
@@ -51,8 +55,8 @@ public class MainActivity extends Activity {
 	loginBtn = (Button) findViewById(R.id.btn_login);
 	registerBtn = (Button) findViewById(R.id.btn_fast_register);
 
-	loginApiUrl = getString(R.string.node_server) + "login";
-	
+	loginApiUrl = getString(R.string.http_server) + "login";
+
 	autoLogin();
 
 	loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -70,16 +74,19 @@ public class MainActivity extends Activity {
 	    }
 	});
     }
-    
+
     /**
      * 判断是否登录过，是则自动登录
      */
-    private void autoLogin(){
+    private void autoLogin() {
 	savedUserName = PreferenceUtil.getString("user_name", "");
 	savedPwd = PreferenceUtil.getString("user_pwd", "");
-	if(savedUserName.equals("") || savedPwd.equals("")){
-	    return ;
-	}else {
+	if (savedUserName.equals("") || savedPwd.equals("")) {
+	    if (!savedUserName.equals("")) {
+		userEdit.setText(savedUserName);
+	    }
+	    return;
+	} else {
 	    Intent intent = new Intent(MainActivity.this, RecordActivity.class);
 	    startActivity(intent);
 	}
@@ -98,13 +105,14 @@ public class MainActivity extends Activity {
 	    new LoginTask(this, userName, password).execute();
 	}
     }
-    
-    private void showRegisterToast(){
+
+    private void showRegisterToast() {
 	MyApplication.getInstance().showToast(this, "当前只供内部测试，不提供注册功能");
     }
 
     /**
      * 验证登录信息
+     * 
      * @author lichen2
      */
     class LoginTask extends AsyncTask<Object, Object, ResultBean> {
@@ -126,6 +134,7 @@ public class MainActivity extends Activity {
 		result = HttpUtil.login(loginApiUrl, userName, pwd);
 	    } catch (Exception e) {
 		e.printStackTrace();
+		MyApplication.getInstance().showToast(context, "发送请求失败 = =!");
 	    }
 	    return result;
 	}
@@ -147,31 +156,31 @@ public class MainActivity extends Activity {
 	    }
 	}
     }
-    
+
     /**
      * 监听返回键，弹出退出应用提示框
      */
     @Override
     public void onBackPressed() {
 	AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-	
+
 	boolean isCamera = PreferenceUtil.getBoolean("is_camera", false);
 	boolean isRecord = PreferenceUtil.getBoolean("is_record", false);
-	
-	if(isCamera || isRecord){
+
+	if (isCamera || isRecord) {
 	    builder.setMessage("当前有正在直播的进程，是否继续退出应用");
-	}else {
+	} else {
 	    builder.setMessage("退出应用");
 	}
 	builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-	    
+
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
 		dialog.dismiss();
 	    }
 	});
 	builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-	    
+
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
 		MyApplication.getInstance().exit();
@@ -179,6 +188,5 @@ public class MainActivity extends Activity {
 	});
 	builder.show();
     }
-
 
 }

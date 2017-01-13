@@ -33,7 +33,6 @@ public class ScreenAudioRecordService extends Thread {
     private int mWidth;
     private int mHeight;
     private String rtmpUrl;
-    private int mBitRate;
     private int mDpi;
     private boolean ifSave = false;
     private String mPath; // 文件保存路径
@@ -48,34 +47,32 @@ public class ScreenAudioRecordService extends Thread {
     // for audio capture
     private NTAudioRecord audioRecord = null;
 
-    public ScreenAudioRecordService(int width, int height, String url, int bitrate, int dpi, MediaProjection mp,
+    public ScreenAudioRecordService(int width, int height, String url, int dpi, MediaProjection mp,
 	    Context context) {
 	mWidth = width;
 	mHeight = height;
 	rtmpUrl = url;
-	mBitRate = bitrate;
 	mDpi = dpi;
 	mContext = context;
 	mMediaProjection = mp;
 	mPublisherJni = new SmartPublisherJni();
-	if (width > 480) {
+	if (width > 800) {
 	    mWidth /= 2;
 	    mHeight /= 2;
 	}
     }
 
-    public ScreenAudioRecordService(int width, int height, String url, int bitrate, int dpi, MediaProjection mp,
+    public ScreenAudioRecordService(int width, int height, String url, int dpi, MediaProjection mp,
 	    Context context, String filePath) {
 	mWidth = width;
 	mHeight = height;
 	rtmpUrl = url;
-	mBitRate = bitrate;
 	mDpi = dpi;
 	mContext = context;
 	mMediaProjection = mp;
 	mPath = filePath;
 	mPublisherJni = new SmartPublisherJni();
-	if (width > 480) {
+	if (width > 800) {
 	    mWidth /= 2;
 	    mHeight /= 2;
 	}

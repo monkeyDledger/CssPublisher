@@ -18,7 +18,7 @@
             style="@style/font18_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
-            android:onClick="onClick">
+            android:textIsSelectable="true">
         </TextView>
 
         <TextView

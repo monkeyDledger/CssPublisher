@@ -75,14 +75,6 @@ public class UserFragment extends Fragment {
 
 	mAdapter = new RecordsListAdapter(getActivity());
 
-	userTextView.setOnClickListener(new View.OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		showLogOutDialog();
-	    }
-	});
-
 	eListView.setOnGroupClickListener(new OnGroupClickListener() {
 
 	    @Override
@@ -149,7 +141,7 @@ public class UserFragment extends Fragment {
 	userName = PreferenceUtil.getString("user_name", "你");
 	userTextView.setText(userName);
 	
-	httpUrl = getString(R.string.node_server);
+	httpUrl = getString(R.string.http_server);
 
 	fileList = new ArrayList<FileInfoBean>();
 	allFiles = new ArrayList<FileInfoBean>();
@@ -195,31 +187,6 @@ public class UserFragment extends Fragment {
 	} else {
 	    return allFiles;
 	}
-    }
-
-    /**
-     * 退出登录确认框
-     */
-    private void showLogOutDialog() {
-	builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-	builder.setMessage("退出登录");
-	builder.setNegativeButton("取消", new OnClickListener() {
-
-	    @Override
-	    public void onClick(DialogInterface dialog, int which) {
-		dialog.dismiss();
-	    }
-	});
-	builder.setPositiveButton("确认", new OnClickListener() {
-
-	    @Override
-	    public void onClick(DialogInterface dialog, int which) {
-		Intent intent = new Intent(getActivity(), MainActivity.class);
-		PreferenceUtil.setString("user_pwd", "");
-		startActivity(intent);
-	    }
-	});
-	builder.show();
     }
 
     /**
@@ -307,6 +274,7 @@ public class UserFragment extends Fragment {
 		    }
 		} else {
 		    new uploadTask(getActivity(), httpUrl+"receiveFiles", userName, choosedFiles).execute();
+//		    new uploadTask(getActivity(), "http://172.20.7.66:3010/api/receiveFiles", userName, choosedFiles).execute();
 		}
 	    }
 	});
@@ -353,6 +321,7 @@ public class UserFragment extends Fragment {
 	protected void onPreExecute() {
 	    progress = new ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
 	    progress.setMessage("上传ing...");
+	    progress.setCancelable(false);
 	    progress.show();
 	}
 

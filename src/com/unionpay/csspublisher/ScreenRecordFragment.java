@@ -12,7 +12,9 @@ import com.unionpay.util.FileUtil;
 import com.unionpay.util.PreferenceUtil;
 import com.unionpay.util.StatusNotifyTask;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
@@ -52,6 +54,8 @@ public class ScreenRecordFragment extends Fragment {
     private MediaProjectionManager mProjectionManager;
 
     private String userName, rtmpUrl, recordFileName;
+    private String[] rtmpUrls = {"", ""};
+    private String[] httpUrls = {"", ""};
     
     //直播状态通知接口
     private static String statusUrl = null; 
@@ -140,6 +144,39 @@ public class ScreenRecordFragment extends Fragment {
 		}
 	    }
 	});
+	
+	//点击地址切换直播
+	urlText.setOnClickListener(new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), 
+			AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+		builder.setTitle("切换推流地址");
+		builder.setSingleChoiceItems(rtmpUrls, -1, new DialogInterface.OnClickListener() {
+		    
+		    @Override
+		    public void onClick(DialogInterface dialogInterface, int i) {
+			rtmpUrl = rtmpUrls[i];
+		    }
+		});
+		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+		    
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+			dialog.dismiss();
+		    }
+		});
+		builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+		    
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+			urlText.setText(rtmpUrl);
+		    }
+		});
+		builder.show();
+	    }
+	});
 
 	startBtn.setOnClickListener(recordListener);
     }
@@ -154,10 +191,12 @@ public class ScreenRecordFragment extends Fragment {
 
     private void initData() {
 	userName = PreferenceUtil.getString("user_name", "");
-	rtmpUrl = getString(R.string.server_url) + userName;
+	rtmpUrl = getString(R.string.rtmp_server_url) + userName;
 	urlText.setText(rtmpUrl);
+	rtmpUrls[0] = rtmpUrl;
+	rtmpUrls[1] = getString(R.string.rtmp_local_url) + userName;
 	
-	statusUrl = getString(R.string.node_server) + "liveStatus";
+	statusUrl = getString(R.string.http_server) + "liveStatus";
     }
 
     /**
@@ -286,7 +325,7 @@ public class ScreenRecordFragment extends Fragment {
 	    // getActivity());
 	    // recordWithImageService.start();
 
-	    saRecordService = new ScreenAudioRecordService(displayWidth, displayHeight, rtmpUrl, 6000000, dpi, mediaProjection,
+	    saRecordService = new ScreenAudioRecordService(displayWidth, displayHeight, rtmpUrl, dpi, mediaProjection,
 		    getActivity());
 	    saRecordService.start();
 	    break;
@@ -299,14 +338,13 @@ public class ScreenRecordFragment extends Fragment {
 	    // getActivity());
 	    // recordWithImageService.start();
 
-	    saRecordService = new ScreenAudioRecordService(displayWidth, displayHeight, rtmpUrl, 6000000, dpi, mediaProjection,
+	    saRecordService = new ScreenAudioRecordService(displayWidth, displayHeight, rtmpUrl, dpi, mediaProjection,
 		    getActivity(), rtmpFile.getAbsolutePath());
 	    saRecordService.start();
 	    break;
 	default:
 	    break;
 	}
-	MyApplication.getInstance().showToast(getActivity(), "正在录屏中...");
 	getActivity().moveTaskToBack(true);
 	
 	notifyStatus("1");
@@ -318,7 +356,20 @@ public class ScreenRecordFragment extends Fragment {
      */
     private void notifyStatus(String status){
 	Log.i(TAG, "status url " + statusUrl);
-	new StatusNotifyTask(userName, status, getActivity()).execute();
+	new StatusNotifyTask(statusUrl, userName, status).execute();
+    }
+    
+    /**
+     * 结束
+     */
+    private void stop(){
+	if (mediaRecord != null) {
+	    mediaRecord.release();
+	}
+	if (saRecordService != null) {
+	    notifyStatus("0");
+	    saRecordService.release();
+	}
     }
 
     /**
@@ -359,6 +410,10 @@ public class ScreenRecordFragment extends Fragment {
 
     public void onResume() {
 	super.onResume();
+	if(RECORDKIND == 0){
+	    fileLayout.setVisibility(View.VISIBLE);
+	}
+	
 	if (mediaRecord != null || saRecordService != null) {
 	    startBtn.setText("录屏ing...点击停止");
 	}
@@ -383,12 +438,7 @@ public class ScreenRecordFragment extends Fragment {
     public void onDestroy() {
 	super.onDestroy();
 	Log.i(TAG, "onDestroy");
-	if (mediaRecord != null) {
-	    mediaRecord.release();
-	}
-	if (saRecordService != null) {
-	    saRecordService.release();
-	}
+	stop();
     }
 
 }

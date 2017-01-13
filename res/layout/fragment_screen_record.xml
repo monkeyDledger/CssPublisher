@@ -59,6 +59,7 @@
                     style="@style/font14_light_sea_green"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onClick"
                     android:textIsSelectable="true"
                     android:layout_marginLeft="5dp" />
             </LinearLayout>
@@ -94,8 +95,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:orientation="horizontal"
-                android:visibility="visible" >
+                android:orientation="horizontal" >
 
                 <EditText
                     android:id="@+id/screen_file_path"
