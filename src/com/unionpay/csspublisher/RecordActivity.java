@@ -181,8 +181,16 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
      * 退出登录确认框
      */
     private void showLogOutDialog() {
+	
+	isCamera = PreferenceUtil.getBoolean("is_camera", false);
+	isRecord = PreferenceUtil.getBoolean("is_record", false);
+	
 	builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-	builder.setMessage("退出登录");
+	if(isCamera || isRecord){
+	    builder.setMessage("当前有正在直播的进程，是否继续退出登录");
+	}else {
+	    builder.setMessage("退出登录");
+	}
 	builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
 	    @Override
@@ -194,6 +202,11 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
 
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
+		if(isCamera || isRecord){
+		    new StatusNotifyTask(statusUrl, userName, "0").execute();
+		    PreferenceUtil.setBoolean("is_camera", false);
+		    PreferenceUtil.setBoolean("is_record", false);
+		}
 		Intent intent = new Intent(RecordActivity.this, MainActivity.class);
 		PreferenceUtil.setString("user_pwd", "");
 		startActivity(intent);

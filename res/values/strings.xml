@@ -9,7 +9,8 @@
     <string name="rtmp_local_url">rtmp://172.20.6.162:1935/live/</string>
     
     <!-- http server -->
-    <string name="http_server">http://172.18.63.148:3010/api/</string>
+    <!-- <string name="http_server">http://172.18.63.148:3010/api/</string> -->
+    <string name="http_server">http://172.20.7.66:3010/api/</string>
     
     <string name="default_record_dir">/sdcard/csspublisher/records/</string>
     <string name="default_rtmp_dir">/sdcard/csspublisher/rtmps/</string>
