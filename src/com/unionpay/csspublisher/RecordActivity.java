@@ -10,7 +10,6 @@ import com.unionpay.util.StatusNotifyTask;
 import com.unionpay.view.TopTitleBar;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,11 +20,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -97,6 +94,16 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
 		showLogOutDialog();
 	    }
 	});
+	topTitle.setRightButton(R.drawable.list, new OnClickListener() {
+	    
+	    @Override
+	    public void onClick(View v) {
+		Intent intent = new Intent(RecordActivity.this, AlbumsActivity.class);
+		startActivity(intent);
+	    }
+	});
+	
+	topTitle.getRightButton().setVisibility(View.GONE);
 
 	vPager = (ViewPager) findViewById(R.id.record_viewpager);
 
@@ -259,14 +266,17 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
 	case 0:
 	    screenImage.setImageResource(R.drawable.phone_record_light);
 	    screenText.setTextColor(getResources().getColor(R.color.tab_blue));
+	    topTitle.getRightButton().setVisibility(View.GONE);
 	    break;
 	case 1:
 	    cameraImage.setImageResource(R.drawable.camera_light);
 	    cameraText.setTextColor(getResources().getColor(R.color.tab_blue));
+	    topTitle.getRightButton().setVisibility(View.GONE);
 	    break;
 	case 2:
 	    userImage.setImageResource(R.drawable.user_light);
 	    userText.setTextColor(getResources().getColor(R.color.tab_blue));
+	    topTitle.getRightButton().setVisibility(View.VISIBLE);
 	    break;
 	default:
 	    break;

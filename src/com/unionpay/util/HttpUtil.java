@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.unionpay.application.MyApplication;
 import com.unionpay.model.FileInfoBean;
+import com.unionpay.model.PhotoUpImageItem;
 import com.unionpay.model.ResultBean;
 
 import android.content.Context;
@@ -47,6 +48,7 @@ public class HttpUtil {
     private static Gson gson = new Gson();
     
     private static MediaType MEDIA_TYPE_MP4 = MediaType.parse("application/octet-stream");
+    private static MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
     
     /**
      * 发送post请求
@@ -143,9 +145,52 @@ public class HttpUtil {
 	return resultBean;
     }
     
+    /**
+     * 批量图片上传
+     * @param context
+     * @param url
+     * @param files
+     * @param userName
+     * @return
+     * @throws IOException
+     */
+    public static Response postImages(final Context context, String url, List<PhotoUpImageItem> files,  String userName)
+	    throws IOException{
+	OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+	
+	MultipartBody.Builder bodyBuilder = new MultipartBody.Builder();
+	bodyBuilder.setType(MultipartBody.FORM);
+	//添加文件
+	for(PhotoUpImageItem file : files){
+	    File object = new File(file.getImagePath());
+	    if(object.exists()){
+		RequestBody body = RequestBody.create(MEDIA_TYPE_PNG, object);
+		bodyBuilder.addFormDataPart(getCurrentTime(), file.getImageName(), 
+			body);
+	    }
+	}
+	
+	//添加参数，用户名
+	if(userName != null){
+	    bodyBuilder.addFormDataPart("userName", userName);
+	}
+	
+	Request request = new Request.Builder()
+		.url(url)
+		.post(bodyBuilder.build())
+		.build();
+	OkHttpClient client = builder.connectTimeout(30, TimeUnit.SECONDS)
+		.writeTimeout(100, TimeUnit.SECONDS)
+		.build();
+	
+	Call call = client.newCall(request);
+	
+	return call.execute();
+    }
+    
     
     /**
-     * okhttp批量上传文件,带参数和进度
+     * okhttp批量上传视频文件,带参数和进度
      * @param url
      * @param files
      * @throws IOException 

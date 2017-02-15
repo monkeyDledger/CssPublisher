@@ -32,6 +32,7 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import okhttp3.Response;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -105,7 +106,8 @@ public class UserFragment extends Fragment {
 		MyApplication.getInstance().showToast(getActivity(), "视频列表已更新");
 	    }
 	});
-
+	
+	//删除按钮事件
 	deleteBtn.setOnClickListener(new View.OnClickListener() {
 
 	    @Override
@@ -118,7 +120,8 @@ public class UserFragment extends Fragment {
 		}
 	    }
 	});
-
+	
+	//上传按钮事件
 	uploadBtn.setOnClickListener(new View.OnClickListener() {
 
 	    @Override
@@ -273,7 +276,7 @@ public class UserFragment extends Fragment {
 			MyApplication.getInstance().showToast(getActivity(), "文件删除失败");
 		    }
 		} else {
-		    new uploadTask(getActivity(), httpUrl+"receiveFiles", userName, choosedFiles).execute();
+		    new UploadTask(getActivity(), httpUrl+"receiveFiles", userName, choosedFiles).execute();
 //		    new uploadTask(getActivity(), "http://172.20.7.66:3010/api/receiveFiles", userName, choosedFiles).execute();
 		}
 	    }
@@ -302,7 +305,7 @@ public class UserFragment extends Fragment {
 	return true;
     }
     
-    class uploadTask extends AsyncTask<Object, Object, Response>{
+    class UploadTask extends AsyncTask<Object, Object, Response>{
 	
 	String userName;
 	Context context;
@@ -311,7 +314,7 @@ public class UserFragment extends Fragment {
 	ProgressDialog progress;
 	Response response;
 	
-	public uploadTask(Context context, String url, String userName, List<FileInfoBean> list) {
+	public UploadTask(Context context, String url, String userName, List<FileInfoBean> list) {
 	    this.context = context;
 	    this.url = url;
 	    this.userName = userName;
