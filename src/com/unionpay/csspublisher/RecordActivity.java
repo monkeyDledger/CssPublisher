@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.unionpay.application.MyApplication;
+import com.unionpay.util.PermissionResultCallBack;
+import com.unionpay.util.PermissionUtil;
 import com.unionpay.util.PreferenceUtil;
 import com.unionpay.util.StatusNotifyTask;
 import com.unionpay.view.TopTitleBar;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 主界面 
@@ -61,23 +66,66 @@ public class RecordActivity extends FragmentActivity implements OnClickListener 
     private String statusUrl, userName;
     
     private boolean isRecord, isCamera;
+    
+    private int mPermissionCode = 42;
 
     static {
-	System.load("libSmartPublisher.so");
+	System.loadLibrary("SmartPublisher"); 
     }
 
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	Log.i(TAG, "onCreate");
 	setContentView(R.layout.activity_record);
+	
+	if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+	    builder = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+	    builder.setMessage("您设备的安卓系统版本低于5.0，暂不支持直播功能，但本地录屏和图片上传功能可正常使用");
+	    builder.setPositiveButton("确认", new AlertDialog.OnClickListener() {
+	        
+	        @Override
+	        public void onClick(DialogInterface dialog, int which) {
+	            dialog.dismiss();
+	        }
+	    });
+	    builder.show();
+	}
 
 	MyApplication.getInstance().addActivity(this);
 	// 禁止屏幕休眠
 	getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 		WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	
+	initPermission();
 
 	initView();
 	initData();
+    }
+    
+    private void initPermission(){
+	String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+		Manifest.permission.WRITE_EXTERNAL_STORAGE};
+	PermissionUtil.getInstance().request(RecordActivity.this, permissions, mPermissionCode, new PermissionResultCallBack() {
+	    
+	    @Override
+	    public void onRationalShow(String... permissions) {
+		StringBuilder builder = new StringBuilder();
+                for (String permission : permissions) {
+                    builder.append(permission.substring(permission.lastIndexOf(".") + 1) + " ");
+                }
+                Log.d(TAG, builder.toString() + " show Rational");
+	    }
+	    
+	    @Override
+	    public void onPermissionGranted() {
+		Log.d(TAG, "用户允许了所有权限");
+	    }
+	    
+	    @Override
+	    public void onPermissionDenied(String... permissions) {
+		Log.d(TAG, "用户拒绝了这些权限");
+	    }
+	});
     }
 
     /**
